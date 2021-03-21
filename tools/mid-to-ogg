@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+for FN in "$@"; do
+	timidity -Ov -o "$FN.ogg" "$FN"
+done
