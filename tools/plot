@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+CMD="plot"
+for FN in "$@"
+do
+	DAT=/tmp/$(basename $FN).dat
+	time-dat.b $FN >$DAT
+	CMD+=" '$DAT',"
+done
+
+#echo $CMD
+gnuplot -p -e "${CMD%,*}"
