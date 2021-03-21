@@ -1,15 +1,15 @@
 #!/usr/bin/boron
-; Compute average time/CPU cycles from log file.
+; Extract CPU cycle counts from log file and output gnuplot data.
 
 prefix: "^/ut: "
 
-do-ave: yes
-do-plot: no
+do-ave: no
+do-plot: yes
 log-file: none
 
 forall args [
     switch first args [
-        "-p" [do-ave: no do-plot: yes]
+        "-a" [do-ave: yes do-plot: no]
         [log-file: first args]
     ]
 ]
