@@ -1,0 +1,35 @@
+xu4 Todo List & Roadmap
+
+Bugs
+====
+
+[ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
+
+
+1. Cleanup & Modernize Backend
+==============================
+This will cleanup the code and start down the path to GPU rendering.
+
+[ ] Cleanup backends
+[ ]    Drop iOS due to lack of developer support.
+[/] Remove indexed (CLUT) images
+[/] Create Allegro 5 backend
+[ ] Create GameServices
+[ ]    Collect globals into struct
+[ ]    Init/free modules in consistent manner
+
+
+2. Refactor Config
+==================
+This will hide the configuration storage format to allow alternate
+storage backends.
+
+[ ] Replace uses of ConfigElement with Config methods that return
+    data (raw structures if possible).
+[ ] Create Boron backend
+
+
+3. Make the engine a 2D/3D hybrid
+=================================
+
+[ ] Convert raster blits to GPU primitive lists.
