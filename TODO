@@ -3,6 +3,7 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
+[ ] Cannot exit when sleep! effect on party (sleep disables input).
 [ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
 
 
@@ -11,18 +12,18 @@ Bugs
 This will cleanup the code and start down the path to GPU rendering.
 
 [ ] Cleanup backends
-[ ]    Drop iOS due to lack of developer support.
+[X]    Drop iOS due to lack of developer support.
 [/] Remove indexed (CLUT) images
-[/] Create Allegro 5 backend
-[ ] Create GameServices
-[ ]    Collect globals into struct
+[X] Create Allegro 5 backend
+[/] Create GameServices
+[/]    Collect globals into struct
 [ ]    Init/free modules in consistent manner
 
 
-2. Refactor Config
-==================
+2. Refactor Config to be more Data Oriented
+===========================================
 This will hide the configuration storage format to allow alternate
-storage backends.
+storage backends and simplify data access.
 
 [ ] Replace uses of ConfigElement with Config methods that return
     data (raw structures if possible).
