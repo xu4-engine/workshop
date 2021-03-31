@@ -1,0 +1,31 @@
+#!/bin/bash
+# Create Windows x64 usr/ directory tree from NuGet packages.
+
+NUGET_URL=https://globalcdn.nuget.org/packages
+
+PKG=(
+	allegro.5.2.7.nupkg
+	allegrodeps.1.12.0.nupkg
+)
+	#libxml2.2.7.8.7.nupkg			# Outdated; built from source without iconv
+	#libiconv.1.14.0.11.nupkg
+	#libpng-v142.1.6.37.2.nupkg		# Part of allegrodeps
+
+mkdir -p unpack usr/lib
+
+for NP in ${PKG[*]}; do
+	if [ ! -e $NP ]; then
+		wget --no-check-certificate ${NUGET_URL}/$NP || exit 1
+	fi
+	echo "Unpacking $NP"
+	cd unpack
+	unzip -q -o ../$NP || exit 1
+	cd ..
+done
+
+NAT=unpack/build/native
+mv ${NAT}/include usr
+mv ${NAT}/v142/x64/bin usr
+cp ${NAT}/v142/x64/lib/allegro* usr/lib
+cp ${NAT}/v142/x64/deps/lib/*.lib usr/lib
+#cp ${NAT}/lib/v110/x64/Release/static/cdecl/*.lib usr/lib
