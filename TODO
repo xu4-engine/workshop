@@ -11,13 +11,14 @@ Bugs
 ==============================
 This will cleanup the code and start down the path to GPU rendering.
 
-[ ] Cleanup backends
+[/] Cleanup backends
 [X]    Drop iOS due to lack of developer support.
 [/] Remove indexed (CLUT) images
 [X] Create Allegro 5 backend
 [/] Create GameServices
 [/]    Collect globals into struct
 [ ]    Init/free modules in consistent manner
+[/] Fix all memory leaks.
 
 
 2. Refactor Config to be more Data Oriented
@@ -25,9 +26,10 @@ This will cleanup the code and start down the path to GPU rendering.
 This will hide the configuration storage format to allow alternate
 storage backends and simplify data access.
 
-[ ] Replace uses of ConfigElement with Config methods that return
+[/] Replace uses of ConfigElement with Config methods that return
     data (raw structures if possible).
-[ ] Create Boron backend
+[ ] Create xu4 binary backend.
+[ ]   Create pack-xu4 tool.
 
 
 3. Make the engine a 2D/3D hybrid
