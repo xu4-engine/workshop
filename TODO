@@ -5,19 +5,22 @@ Bugs
 
 [ ] Cannot exit when sleep! effect on party (sleep disables input).
 [ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
+    (Or better yet, just ditch cmake)
 
 
 1. Cleanup & Modernize Backend
 ==============================
 This will cleanup the code and start down the path to GPU rendering.
 
-[/] Cleanup backends
+[/] Cleanup backends.
 [X]    Drop iOS due to lack of developer support.
-[/] Remove indexed (CLUT) images
-[X] Create Allegro 5 backend
-[/] Create GameServices
-[/]    Collect globals into struct
-[ ]    Init/free modules in consistent manner
+[/] Remove indexed (CLUT) images.
+[ ]    Re-implement text coloration.
+[ ]    Re-implement dungeon color remapping.
+[X] Create Allegro 5 backend.
+[/] Create GameServices.
+[/]    Collect globals into struct.
+[ ]    Init/free modules in consistent manner.
 [/] Fix all memory leaks.
 
 
@@ -28,11 +31,33 @@ storage backends and simplify data access.
 
 [/] Replace uses of ConfigElement with Config methods that return
     data (raw structures if possible).
-[ ] Create xu4 binary backend.
-[ ]   Create pack-xu4 tool.
+[ ] Allow game to run by just placing binary in GOG Ultima 4 directory.
+[ ] Create xu4 binary package backend.
+[.]   Create pack-xu4 tool.
 
 
-3. Make the engine a 2D/3D hybrid
-=================================
+3. Rendering with GPU
+=====================
+Accelerate drawing and support 3D scenes & models.
 
+[X] Create OpenGL context and shader.
 [ ] Convert raster blits to GPU primitive lists.
+[ ] Render 3D models.
+
+
+4. Toolset for Extended Journeys
+================================
+
+[ ] Map editor
+[ ] NPC editor
+[ ] Item editor (new equipment)
+[ ] Zone editor (path following)
+
+
+5. Emulate Ulitma V
+===================
+The game data is similar to U4, so this shouldn't be too hard.
+
+[ ] Load maps & graphics.
+[ ] Render graphics properly.
+[ ] Implement character behavior.
