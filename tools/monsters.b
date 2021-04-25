@@ -1,5 +1,5 @@
 #!/usr/bin/boron -s
-; Edit MONSTERS.SAV
+; Dump MONSTERS.SAV
 
 file: first args
 if ne? 256 second info? file [
@@ -9,6 +9,10 @@ if ne? 256 second info? file [
 
 coord: func [xind] [
     to-coord reduce [pick xind 1 pick xind 0x21]
+]
+
+coord3: func [xind] [
+    to-coord reduce [pick xind 1 pick xind 0x21 pick xind 0x41]
 ]
 
 gfx: func [id] [
@@ -67,14 +71,14 @@ graphics: [
 dat: read file
 print "monsters: ["
 loop [i 0 31] [
-    if all [
-        not zero? tid: pick dat 1
-        not zero? prev-tid: pick dat 0x61
-    ][
+    cid: pick dat 1
+    pid: pick dat 0x61
+    ifn zero? or cid pid [
+        pcoord: either zero? cid [:coord3] [:coord]
         print format ["  " 2 ' ' 12 ' ' 8 ' ' 12 ' ' 8] [
             i
-            gfx tid      coord skip dat 0x20
-            gfx prev-tid coord skip dat 0x80
+            gfx cid coord  skip dat 0x20
+            gfx pid pcoord skip dat 0x80
         ]
     ]
     ++ dat
