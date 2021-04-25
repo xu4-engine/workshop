@@ -1,11 +1,8 @@
 #!/usr/bin/boron -s
-; Edit DNGMAP.SAV
+; Dump DNGMAP.SAV and *.DNG files.
 
 file: first args
-if ne? 512 second info? file [
-    print "DNGMAP.SAV must be 512 bytes."
-    quit/return 1
-]
+fsize: second info? file
 
 ; Features 0x80 0x90 0xA0 0xD0 use low nibble
 features: [
@@ -46,28 +43,40 @@ monsters: [
     0xF  Rogue
 ]
 
-map: read file
-loop [lvl 1 8] [
-    print ["Level:" lvl]
-    loop [row 0 7] [
-        loop [col 0 7] [
-            byte: first ++ map
+dngmap: func [file] [
+    map: read file
+    loop [lvl 1 8] [
+        print ["Level:" lvl]
+        loop [row 0 7] [
+            loop [col 0 7] [
+                byte: first ++ map
 
-            feat: select features hnib: and byte 0xf0
-            mon:  and byte 0x0f
-            switch hnib [
-                0x80 [mon: pick "wr............p." add 1 mon]
-                0x90 [mon: pick "whdcp" add 1 mon]
-                0xA0 [mon: pick "PEFS"  add 1 mon]
-                0xD0 []
-                [
-                    mon: select monsters mon
-                    if word? mon [mon: slice to-string mon 3]
+                feat: select features hnib: and byte 0xf0
+                mon:  and byte 0x0f
+                switch hnib [
+                    0x80 [mon: pick "wr............p." add 1 mon]
+                    0x90 [mon: pick "whdcp" add 1 mon]
+                    0xA0 [mon: pick "PEFS"  add 1 mon]
+                    0xD0 []
+                    [
+                        mon: select monsters mon
+                        if word? mon [mon: slice to-string mon 3]
+                    ]
                 ]
-            ]
 
-            prin format ["  " -2 ' ' 3] [feat mon]
+                prin format ["  " -2 ' ' 3] [feat mon]
+            ]
+            prin '^/'
         ]
-        prin '^/'
+    ]
+]
+
+switch fsize [
+     512  [dngmap file]
+    4608  [dngmap file]
+    16896 [dngmap file]
+    [
+        print "DNGMAP.SAV must be 512 bytes."
+        quit/return 1
     ]
 ]
