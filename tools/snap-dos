@@ -1,0 +1,16 @@
+# Snapshot DOS save files to xu4 config subdirectory.
+
+PREFIX=qu
+DOS_PATH=~/games/DOS/ultima4
+XU4_PATH=~/.config/xu4
+
+MLOC=$(boron -e "parse d: read %${DOS_PATH}/PARTY.SAV [bits [u32 mv: u32]] print rejoin [mv '-' pick d 0x1D9 '-' pick d 0x1D5 '_' pick d 0x1D6]")
+
+XU4_PATH=${XU4_PATH}/${PREFIX}${MLOC}
+#echo $XU4_PATH
+mkdir ${XU4_PATH}
+
+for FN in ${DOS_PATH}/*.SAV; do
+	BN=$(basename $FN)
+	cp -a $FN ${XU4_PATH}/${BN,,}
+done

@@ -1,0 +1,9 @@
+# Copy DOS save files to xu4 game for testing.
+
+DOS_PATH=~/games/DOS/ultima4
+XU4_PATH=~/.config/xu4
+
+for FN in ${DOS_PATH}/*.SAV; do
+	BN=$(basename $FN)
+	cp $FN ${XU4_PATH}/${BN,,}
+done
