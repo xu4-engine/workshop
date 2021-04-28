@@ -4,8 +4,21 @@ PREFIX=qu
 DOS_PATH=~/games/DOS/ultima4
 XU4_PATH=~/.config/xu4
 
-MLOC=$(boron -e "parse d: read %${DOS_PATH}/PARTY.SAV [bits [u32 mv: u32]] print rejoin [mv '-' pick d 0x1D9 '-' pick d 0x1D5 '_' pick d 0x1D6]")
+PROG="parse read first args [
+  bits [u32 mv:u32] 460 skip
+  bits [x:u8 y:u8 16 cc:u16] 20 skip
+  bits [dx:u8 dy:u8 16 lv:u16 cl:u16]
+]
+hex: func [n] [skip mold to-hex n 2]
+lv: either zero? cl {} [x:dx y:dy join {-l} lv]
+print format [pad '0' -5 {-p} 0 '-' -2 -2 0] [mv cc hex x hex y lv]"
 
+if [ -n "$1" ]; then
+	echo $(boron -e "${PROG}" "$1")
+	exit
+fi
+
+MLOC=$(boron -e "${PROG}" "${DOS_PATH}/PARTY.SAV")
 XU4_PATH=${XU4_PATH}/${PREFIX}${MLOC}
 #echo $XU4_PATH
 mkdir ${XU4_PATH}
