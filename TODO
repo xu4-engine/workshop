@@ -6,6 +6,8 @@ Bugs
 [ ] Cannot exit when sleep! effect on party (sleep disables input).
 [ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
     (Or better yet, just ditch cmake)
+[ ] Implement trap detection.  Pit/Rock traps can appear 0.5-3.0 seconds
+    after the player has moved or turned.
 
 
 1. Cleanup & Modernize Backend
@@ -21,7 +23,7 @@ This will cleanup the code and start down the path to GPU rendering.
 [/] Create GameServices.
 [/]    Collect globals into struct.
 [ ]    Init/free modules in consistent manner.
-[/] Fix all memory leaks.
+[X] Fix all memory leaks.
 
 
 2. Refactor Config to be more Data Oriented
@@ -29,7 +31,7 @@ This will cleanup the code and start down the path to GPU rendering.
 This will hide the configuration storage format to allow alternate
 storage backends and simplify data access.
 
-[/] Replace uses of ConfigElement with Config methods that return
+[X] Replace uses of ConfigElement with Config methods that return
     data (raw structures if possible).
 [ ] Allow game to run by just placing binary in GOG Ultima 4 directory.
 [ ] Create xu4 binary package backend.
