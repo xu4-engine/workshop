@@ -77,6 +77,31 @@ switch skip tail file -4 [
         print tmx-footer
     ]
 
+    %.dat [
+        chunks: read file   ;%ultima5/BRIT.DAT
+
+        water-chunk: make binary! 256
+        append/repeat water-chunk 1 256
+
+        path: slice file find file %BRIT.DAT
+        fp: open join to-file path %DATA.OVL
+        ovl: read/part skip fp 0x3886 0x100
+        close fp
+
+        ; Insert water chunks into chunk list.
+        expanded: make binary! mul 256 256
+        foreach it ovl [
+            append expanded either eq? it 255 [
+                water-chunk
+            ][
+                slice skip chunks mul 256 it 256
+            ]
+        ]
+        prin  tmx-header
+        print-tmx-data expanded 16 16
+        print tmx-footer
+    ]
+
     %.tmx [
         w: csv: none
         parse read/text file [
