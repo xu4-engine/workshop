@@ -16,6 +16,18 @@ tmx-header: {{
 
 tmx-footer: "  </data>^/ </layer>^/</map>"
 
+tmx-head: func [name dim] [
+    construct tmx-header ["World" name "256" dim ]
+]
+
+tmx-next-layer: func [id name dim] [
+    rejoin [
+        construct { <layer id="#" name="$" width="!" height="!">^/}
+            ['#' id '$' name '!' dim ]
+        {  <data encoding="csv">}
+    ]
+]
+
 print-tmx-data: func [chunks chunk-dim tile-per-chunk] [
     chunk-size: mul tile-per-chunk tile-per-chunk
     last-row: mul chunk-dim tile-per-chunk
@@ -45,6 +57,16 @@ print-tmx-data: func [chunks chunk-dim tile-per-chunk] [
     ]
 ]
 
+print-tmx-obj: func [id tile x y /type tval] [
+    ++ tile
+    x: mul 16 x
+    y: mul 16 add 1 y
+    other: either type [rejoin [{ type="} tval '"']] ""
+    print construct
+        {  <object id="#" gid="$" x="!" y="@" width="16" height="16"%/>}
+        ['#' id '$' tile '!' x '@' y '%' other]
+]
+
 write-map: func [file-handle data chunk-dim tile-per-chunk] [
     chunk-size: mul tile-per-chunk tile-per-chunk
     chunk: make binary! chunk-size
@@ -62,6 +84,13 @@ write-map: func [file-handle data chunk-dim tile-per-chunk] [
         ]
         data: skip data mul tile-per-chunk tile-dim
     ]
+]
+
+basename: func [path] [
+    if pos: find/last path charset "/\" [
+        path: next pos
+    ]
+    slice path find/last path '.'
 ]
 
 fatal: func [msg] [
@@ -102,6 +131,40 @@ switch skip tail file -4 [
         print tmx-footer
     ]
 
+    %.dng [
+        rooms: skip read file 0x200     ;%ultima4/DECEIT.DNG
+        id: 1
+        layer-name: join basename file '-'
+        prin tmx-head join layer-name id 11
+        while [not tail? rooms] [
+            if gt? id 1 [
+                print tmx-next-layer id join layer-name id 11
+            ]
+
+            base: slice rooms 128,121   ; 11x11 map
+            print-tmx-data base 1 11
+            print "  </data>^/ </layer>"
+
+            mon: skip rooms 0x10
+            ifn zero? pick mon 16 [
+                print construct { <objectgroup id="#" name="objects-#">}
+                    ['#' id]
+                obj-id: 1
+                loop 16 [
+                    ifn zero? gid: first mon [
+                        print-tmx-obj ++ obj-id gid pick mon 0x11 pick mon 0x21
+                    ]
+                    ++ mon
+                ]
+                print " </objectgroup>"
+            ]
+
+            rooms: skip rooms 256
+            ++ id
+        ]
+        print "</map>"
+    ]
+
     %.tmx [
         w: csv: none
         parse read/text file [
@@ -128,5 +191,28 @@ switch skip tail file -4 [
         fh: open 1
         write-map fh nums 8 32
         close fh
+    ]
+
+    %.ult [
+        umap: read file         ;%ultima4/COVE.ULT
+        npcs: skip umap 1024
+
+        prin tmx-head basename file 32
+        print-tmx-data umap 1 32
+        print "  </data>^/ </layer>"
+        print { <objectgroup id="1" name="npcs">}
+        obj-id: 1
+        loop 32 [
+            ifn zero? gid: first npcs [
+                print-tmx-obj/type ++ obj-id gid pick npcs 0x21 pick npcs 0x41
+                    rejoin [
+                        select [0 'S' 1 'W' 0x80 'F' 0xFF 'A'] pick npcs 0xC1 
+                        ' ' pick npcs 0xE1
+                    ]
+            ]
+            ++ npcs
+        ]
+        print " </objectgroup>"
+        print "</map>"
     ]
 ]
