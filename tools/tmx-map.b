@@ -14,7 +14,7 @@ tmx-header: {{
   <data encoding="csv">
 }}
 
-tmx-footer: "  </data>^/ </layer>^/</map>"
+tmx-footer: "</map>"
 
 tmx-head: func [name dim] [
     construct tmx-header ["World" name "256" dim ]
@@ -55,6 +55,7 @@ print-tmx-data: func [chunks chunk-dim tile-per-chunk] [
         ]
         chunks: skip chunks mul chunk-dim chunk-size
     ]
+    print "  </data>^/ </layer>"
 ]
 
 print-tmx-obj: func [id tile x y /type tval] [
@@ -65,6 +66,13 @@ print-tmx-obj: func [id tile x y /type tval] [
     print construct
         {  <object id="#" gid="$" x="!" y="@" width="16" height="16"%/>}
         ['#' id '$' tile '!' x '@' y '%' other]
+]
+
+print-tmx-pnt: func [id name x y] [
+    x: add 8 mul 16 x
+    y: add 8 mul 16 y
+    print construct {  <object id="#" name="$" x="!" y="@"><point/></object>}
+        ['#' id '$' name '!' x '@' y]
 ]
 
 write-map: func [file-handle data chunk-dim tile-per-chunk] [
@@ -106,6 +114,25 @@ switch skip tail file -4 [
         print tmx-footer
     ]
 
+    %.con [
+        pos: read file      ;%ultima4/BRIDGE.CON
+        prin tmx-head basename file 11
+        print-tmx-data skip pos 0x40 1 11
+        print { <objectgroup id="1" name="start">}
+        obj-id: 1
+        loop [n 0 15] [
+            print-tmx-pnt ++ obj-id join "monst-" n pick pos 1 pick pos 17
+            ++ pos
+        ]
+        pos: skip pos 16
+        loop [n 0 7] [
+            print-tmx-pnt ++ obj-id join "party-" n pick pos 1 pick pos 9
+            ++ pos
+        ]
+        print " </objectgroup>"
+        print tmx-footer
+    ]
+
     %.dat [
         chunks: read file   ;%ultima5/BRIT.DAT
 
@@ -143,7 +170,6 @@ switch skip tail file -4 [
 
             base: slice rooms 128,121   ; 11x11 map
             print-tmx-data base 1 11
-            print "  </data>^/ </layer>"
 
             mon: skip rooms 0x10
             ifn zero? pick mon 16 [
@@ -162,7 +188,7 @@ switch skip tail file -4 [
             rooms: skip rooms 256
             ++ id
         ]
-        print "</map>"
+        print tmx-footer
     ]
 
     %.tmx [
@@ -199,7 +225,6 @@ switch skip tail file -4 [
 
         prin tmx-head basename file 32
         print-tmx-data umap 1 32
-        print "  </data>^/ </layer>"
         print { <objectgroup id="1" name="npcs">}
         obj-id: 1
         loop 32 [
@@ -213,6 +238,6 @@ switch skip tail file -4 [
             ++ npcs
         ]
         print " </objectgroup>"
-        print "</map>"
+        print tmx-footer
     ]
 ]
