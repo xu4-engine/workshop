@@ -1,0 +1,23 @@
+# Convert all Ultima 4 maps to TMX.
+
+U4=u4/ultima4
+MODULE=module-test/data/map
+
+if [ ! -d "${MODULE}" ]; then
+	echo "Module path ${MODULE} doesn't exist!"
+	exit 73
+fi
+
+# 1:ultima_file
+to_tmx() {
+	local file=$(basename "$1" | tr '[:upper:]' '[:lower:]')
+	tmx-map.b "$1" >"${MODULE}/${file%.*}.tmx" || exit 1
+}
+
+to_tmx "${U4}/WORLD.MAP"
+for FN in ${U4}/*.ULT; do
+	to_tmx $FN
+done
+for FN in ${U4}/*.DNG; do
+	to_tmx $FN
+done
