@@ -5,6 +5,8 @@ Bugs
 
 [ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
     (Or better yet, just ditch cmake)
+[ ] Stop vendors from moving away after speaking with them.
+    Not sure if the turn shouldn't update or if they are locked in place.
 [ ] Implement trap detection.  Pit/Rock traps can appear 0.5-3.0 seconds
     after the player has moved or turned.
 [ ] Fire Phantoms
@@ -29,6 +31,9 @@ This will cleanup the code and start down the path to GPU rendering.
 [/]    Collect globals into struct.
 [ ]    Init/free modules in consistent manner.
 [X] Fix all memory leaks.
+[ ] Update SDL to v2.
+[ ]    Implement loadBitmapPng
+[ ]    Implement equivalent of al_fopen_slice
 
 
 2. Refactor Config to be more Data Oriented
