@@ -16,8 +16,13 @@ precision highp float;
 
 uniform vec3      in_res;       // viewport resolution (in pixels)
 uniform float     in_time;      // shader playback time (in seconds)
+uniform vec3      wind;
 uniform sampler2D noise_tex;
 out vec4 fragColor;
+
+#define TIME in_time
+#define DIR  wind.x
+#define VEL  wind.y
 
 float noise(vec2 p) {
     p *= 0.04;
@@ -35,34 +40,37 @@ float sdCircle(vec2 p, float r) {
 }
 
 #define fillDraw(dist, col) color = mix(col, color, step(0.0, dist))
-#define TIME in_time
 
 vec4 flag(vec2 p) {
     const vec3 flagColor = vec3(1.0, 0.2, 0.2);
     const vec3 stripeCol = vec3(1.0, 1.0, 0.0);
-    const vec2 flagSize = vec2(0.5, 0.5);
+    float flagW = max(0.5 * VEL, 0.05);
     vec3 color = vec3(0.0);
 
-    p = p * 2.0 - 1.0;              // Unit view -1.0 to 1.0
-    vec2 fp = p - vec2(0.5, 0.0);   // Flag position with pole at 0.0 X.
+    p = p * 2.0 - 1.0;                  // Unit view -1.0 to 1.0
+
+    flagW -= sin(3.0 * TIME) * 0.03;
+    vec2 flagSize = vec2(flagW, 0.5);
+
+    vec2 fp = p - vec2(flagW, 0.0);     // Flag position with pole at 0.0 X.
 
     // Shear with a waving motion.
     float wave = sin(4.0 * (p.x - TIME));
-    wave += noise(vec2(p.x - TIME * 1.3, p.y) * 0.8) * 1.0;
-    fp.y += 0.1 * p.x * wave;
-    //fp.y += 0.2 + p.x;          // Droop
+    float nwave = noise(vec2(p.x*0.5 - TIME * 0.5, p.y) * 1.0) * 1.0;
+    fp.y += 0.1 * p.x * (wave + nwave);
+    fp.y += p.x * pow(3.0 * (1.0 - VEL), 2.0);  // Droop
 
     // Shadow the wave ripples.
-    float shadow = 0.4 * wave;
+    float shadow = 0.5 * (wave + nwave * 0.3);
     shadow *= shadow;
 
     // Flag Background
     fillDraw(sdBox(fp, flagSize), flagColor - shadow);
 
     // Flag Details
-    fillDraw(sdBox(fp + vec2(0.0,0.45), vec2(0.5,0.05)), stripeCol - shadow);
-    fillDraw(sdBox(fp - vec2(0.0,0.40), vec2(0.5,0.05)), stripeCol - shadow);
-    fillDraw(sdCircle(fp, 0.2), vec3(1.0) - shadow);
+    fillDraw(sdBox(fp + vec2(0.0,0.45), vec2(flagW,0.05)), stripeCol-shadow);
+    fillDraw(sdBox(fp - vec2(0.0,0.40), vec2(flagW,0.05)), stripeCol-shadow);
+    fillDraw(sdCircle(fp, flagW * 0.4), vec3(1.0) - shadow);
 
     return vec4(color, 1.0);
 }
@@ -75,7 +83,24 @@ void main()
     default [
         in_res: 256.0, 256.0
         in_time: 0.0
+        wind:   0.0, 1.0
         noise_tex: load-texture %noise_2d.png
+    ]
+]
+
+demo-widgets [
+    overlay vbox 0,0,0,0,8 [
+        grid 2,2 0,0 [
+            label "Wind Direction:" label "Wind Velocity:"
+            s1: slider -1.0,1.0 0.0 [
+                print wind-dir: s1/value
+                tech-sh/wind/1: wind-dir
+            ]
+            s2: slider  0.0,1.0 1.0 [
+                print wind-vel: s2/value
+                tech-sh/wind/2: wind-vel
+            ]
+        ]
     ]
 ]
 
