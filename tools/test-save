@@ -1,0 +1,35 @@
+# Run --test-save and compare *.sav files to original.
+
+TOOLS=../workshop/tools
+SOUT=/tmp/xu4
+STMP=/tmp/prof
+SKIP_ID=1
+
+mkdir -p ${SOUT} ${STMP}
+# ln -s ${STMP} profiles/savert
+
+for D in "$@"; do
+	echo
+	echo $D
+
+	rm -f ${SOUT}/*.sav ${STMP}/*.sav
+	cp $D/*.sav ${STMP}
+
+	./xu4 -q -p savert --test-save		# Writes to /tmp/xu4
+	ES=$?
+    if [[ $ES -ne 0 ]]; then
+        echo "xu4 $ES"
+        exit 1
+    fi
+
+	cmp ${STMP}/party.sav ${SOUT}/party.sav
+
+	if [ "$SKIP_ID" ]; then
+		${TOOLS}/monsters.b ${STMP}/monsters.sav | cut -b5- >/tmp/ms_in
+		${TOOLS}/monsters.b ${SOUT}/monsters.sav | cut -b5- >/tmp/ms_out
+	else
+		${TOOLS}/monsters.b ${STMP}/monsters.sav >/tmp/ms_in
+		${TOOLS}/monsters.b ${SOUT}/monsters.sav >/tmp/ms_out
+	fi
+	diff /tmp/ms_in /tmp/ms_out
+done
