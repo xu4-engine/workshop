@@ -1,8 +1,9 @@
 #!/usr/bin/boron -s
 ; Convert Ultima 4 maps to/from Tiled .TMX files.
-; Version 0.1
+; Version 0.2
 
 file: first args
+dungeon-3d: eq? "-3" second args
 
 tmx-header: {{
 <?xml version="1.0" encoding="UTF-8"?>
@@ -159,34 +160,51 @@ switch skip tail file -4 [
     ]
 
     %.dng [
-        rooms: skip read file 0x200     ;%ultima4/DECEIT.DNG
         id: 1
         layer-name: join basename file '-'
-        prin tmx-head join layer-name id 11
-        while [not tail? rooms] [
-            if gt? id 1 [
-                print tmx-next-layer id join layer-name id 11
+        either dungeon-3d [
+            rooms: read/part file 512
+            map it rooms [
+                pick #{161B1C17 3C191A4E 3601444A 3A7D497F} add 1 div it 16
             ]
-
-            base: slice rooms 128,121   ; 11x11 map
-            print-tmx-data base 1 11
-
-            mon: skip rooms 0x10
-            ifn zero? pick mon 16 [
-                print construct { <objectgroup id="#" name="objects-#">}
-                    ['#' id]
-                obj-id: 1
-                loop 16 [
-                    ifn zero? gid: first mon [
-                        print-tmx-obj ++ obj-id gid pick mon 0x11 pick mon 0x21
-                    ]
-                    ++ mon
+            prin tmx-head join layer-name id 8
+            loop 8 [
+                if gt? id 1 [
+                    print tmx-next-layer id join layer-name id 8
                 ]
-                print " </objectgroup>"
+                print-tmx-data rooms 1 8
+                rooms: skip rooms 64
+                ++ id
             ]
+        ][
+            rooms: skip read file 0x200     ;%ultima4/DECEIT.DNG
+            prin tmx-head join layer-name id 11
+            while [not tail? rooms] [
+                if gt? id 1 [
+                    print tmx-next-layer id join layer-name id 11
+                ]
 
-            rooms: skip rooms 256
-            ++ id
+                base: slice rooms 128,121   ; 11x11 map
+                print-tmx-data base 1 11
+
+                mon: skip rooms 0x10
+                ifn zero? pick mon 16 [
+                    print construct { <objectgroup id="#" name="objects-#">}
+                        ['#' id]
+                    obj-id: 1
+                    loop 16 [
+                        ifn zero? gid: first mon [
+                            print-tmx-obj ++ obj-id gid pick mon 0x11
+                                                        pick mon 0x21
+                        ]
+                        ++ mon
+                    ]
+                    print " </objectgroup>"
+                ]
+
+                rooms: skip rooms 256
+                ++ id
+            ]
         ]
         print tmx-footer
     ]
