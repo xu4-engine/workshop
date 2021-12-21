@@ -3,20 +3,24 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
-[ ] cmake must be run twice on Fedora 33 before it spits out a Makefile.
-    (Or better yet, just ditch cmake)
-[ ] Animate moongate opening/closing during introduction.
-[ ] Stop vendors from moving away after speaking with them.
-    Not sure if the turn shouldn't update or if they are locked in place.
+[X] Animate moongate opening/closing during introduction.
+[X] Stop vendors from moving away after speaking with them.  Turn updates
+    normally for other NPCs.  Note that DOS follow behavior differs from xu4.
 [ ] Implement trap detection.  Pit/Rock traps can appear 0.5-3.0 seconds
-    after the player has moved or turned.
-[ ] Pit/Rock traps cause walls to jump up a moment (a shake effect).
-[ ] Fire Phantoms
-[ ]   Should not move onto each other.
-[ ]   Should flash red & purple (~50% chance each frame).
+    after the player has moved or turned.  If there are many in a corridor,
+    only one appears.  If a trap was recently spotted that seems to be the
+    most likely to appear again.  This same algorithm may be used when the
+    trap is triggered as it does not always appear.
+[/] Pit/Rock traps cause walls to jump up a moment (a shake effect confined
+    to the viewport).  A short white-noise sound is used for both trap types.
+[X] Fire Phantoms
+[X]   Should not move onto each other.
+[X]   Should flash red & purple (~50% chance each frame).
       (Save qu21778-p6-48A8-l3-phantom)
 [X] Cannot exit when sleep! effect on party (sleep disables input).
     Fixed in commit bc6839a6.
+[X] cmake must be run twice on Fedora 33 before it spits out a Makefile.
+    Removed cmake files in 6ee0b586.
 
 
 1. Cleanup & Modernize Backend
@@ -27,7 +31,7 @@ This will cleanup the code and start down the path to GPU rendering.
 [X]    Drop iOS due to lack of developer support.
 [/] Remove indexed (CLUT) images.
 [ ]    Re-implement text coloration.
-[ ]    Re-implement dungeon color remapping.
+[X]    Re-implement dungeon color remapping.
 [X] Create Allegro 5 backend.
 [/] Create GameServices.
 [/]    Collect globals into struct.
