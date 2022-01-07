@@ -3,25 +3,13 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
+[ ] On Windows 7 (not Wine though) VGA intro card sequence renders badly and
+    shows two cursors.
 [ ] HQX filter does not work at 5x scale.
-[X] Animate moongate opening/closing during introduction.
-[X] Stop vendors from moving away after speaking with them.  Turn updates
-    normally for other NPCs.  Note that DOS follow behavior differs from xu4.
-[X] Implement trap detection.  Pit/Rock traps can appear 0.0-3.0 seconds
-    after the player has moved or turned.  If there are many in a corridor,
-    only one appears.  If a trap was recently spotted that seems to be the
-    most likely to appear again.  This same algorithm may be used when the
-    trap is triggered as it does not always appear.
-[/] Pit/Rock traps cause walls to jump up a moment (a shake effect confined
-    to the viewport).  A short white-noise sound is used for both trap types.
-[X] Fire Phantoms
-[X]   Should not move onto each other.
-[X]   Should flash red & purple (~50% chance each frame).
-      (Save qu21778-p6-48A8-l3-phantom)
-[X] Cannot exit when sleep! effect on party (sleep disables input).
-    Fixed in commit bc6839a6.
-[X] cmake must be run twice on Fedora 33 before it spits out a Makefile.
-    Removed cmake files in 6ee0b586.
+[ ] Death: In "You hear: <name>" message the name should be centered.
+[ ] Endgame infinity animation does not play.
+[ ] Endgame VGA virtue image colors are wrong.
+[ ] Pit/Rock traps (and Codex?) shaking should be confined to main view.
 
 
 1. Cleanup & Modernize Backend
