@@ -3,15 +3,16 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
-[ ] On Windows 7 (not Wine though) VGA intro card sequence renders badly and
-    shows two cursors.
 [-] HQX filter does not work at 5x scale.
+[-] Pit/Rock traps shaking should be confined to main view.
 [X] Endgame infinity animation does not play.
 [X] Endgame VGA virtue image colors are wrong.
-[-] Pit/Rock traps shaking should be confined to main view.
 [X] Death: In "You hear: <name>" message the name should be centered.
 [X] Ctrl keys do not work on Windows
     Fixed in commit b2a5e2af
+[X] On Windows 7 (not Wine though) VGA intro card sequence renders badly and
+    shows two cursors.
+    Fixed in commit eff60a31
 
 
 1. Cleanup & Modernize Backend
