@@ -3,6 +3,14 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
+[ ] Ship bugs
+[ ]   Pirate ships are indecisive (toggle facing in place).  Seems like they
+      tend to move along their current facing in DOS version.
+[ ]   Player ship sunk by pirates/monsters should keep the hit graphic visible
+      during death seq.
+[ ]   Player ship should only sink after damage goes below zero.
+[ ]   After storm sunk ship an adjacent pirate ship began combat (with no
+      party members visible) then a segfault occurred.
 [ ] Pit/Rock traps shaking should be confined to main view.
 [ ] Have seen "<player> is Killed!" printed twice (was fighting two enemies).
 [ ] HQX filter does not work at 5x scale.
@@ -25,7 +33,7 @@ This will cleanup the code and start down the path to GPU rendering.
 [X] Fix all memory leaks.
 [ ] Update SDL to v2.
 [ ]    Implement loadBitmapPng
-[ ]    Implement equivalent of al_fopen_slice
+[-]    Implement equivalent of al_fopen_slice.  Not needed with Fuan backend.
 
 
 2. Refactor Config to be more Data Oriented
@@ -38,7 +46,9 @@ storage backends and simplify data access.
 [-] Allow game to run by just placing binary in GOG Ultima 4 directory.
 [/] Create xu4 package backend (game modules).
 [X]   Create pack-xu4 tool.
-[ ]   Package overlay.
+[/]   Package overlay.
+[ ]   Store game module in settings->game.
+[ ]   Allow user to select game module from inside program.
 
 
 3. Rendering with GPU
