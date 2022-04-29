@@ -43,7 +43,7 @@ print-tmx-data: func [chunks chunk-dim tile-per-chunk] [
             loop chunk-dim [
                 x: 1
                 loop tile-per-chunk [
-                    append append row add 1 pick in-row ++ x ','
+                    appair row add 1 pick in-row ++ x ','
                 ]
                 in-row: skip in-row chunk-size
             ]
@@ -59,14 +59,20 @@ print-tmx-data: func [chunks chunk-dim tile-per-chunk] [
     print "  </data>^/ </layer>"
 ]
 
-print-tmx-obj: func [id tile x y /type tval] [
+print-tmx-obj: func [id tile x y /type tval /name nval] [
     ++ tile
     x: mul 16 x
     y: mul 16 add 1 y
-    other: either type [rejoin [{ type="} tval '"']] ""
-    print construct
-        {  <object id="#" gid="$" x="!" y="@" width="16" height="16"%/>}
-        ['#' id '$' tile '!' x '@' y '%' other]
+    str: construct
+        {  <object id="#" gid="$" x="!" y="@" width="16" height="16"}
+        ['#' id '$' tile '!' x '@' y]
+    if all [name nval] [
+        appair append str { name="} nval '"'
+    ]
+    if type [
+        appair append str { type="} tval '"'
+    ]
+    print append str "/>"
 ]
 
 print-tmx-pnt: func [id name x y] [
@@ -241,16 +247,27 @@ switch skip tail file -4 [
         umap: read file         ;%ultima4/COVE.ULT
         npcs: skip umap 1024
 
+        tlk: read/text construct file [".ULT" ".TLK"]
+        name-of: func [n] [
+            if or zero? n gt? n 16 [return none]
+            -- n
+            tname: skip tlk add 3 mul n 288
+            slice tname find tname '^0'
+        ]
+
         prin tmx-head basename file 32
         print-tmx-data umap 1 32
         print { <objectgroup id="1" name="npcs">}
         obj-id: 1
         loop 32 [
             ifn zero? gid: first npcs [
-                print-tmx-obj/type ++ obj-id gid pick npcs 0x21 pick npcs 0x41
+                tlk-index: pick npcs 0xE1
+                print-tmx-obj/name/type ++ obj-id gid pick npcs 0x21
+                                                      pick npcs 0x41
+                    name-of tlk-index
                     rejoin [
                         select [0 'S' 1 'W' 0x80 'F' 0xFF 'A'] pick npcs 0xC1 
-                        ' ' pick npcs 0xE1
+                        ' ' tlk-index
                     ]
             ]
             ++ npcs
