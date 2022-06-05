@@ -247,12 +247,17 @@ switch skip tail file -4 [
         umap: read file         ;%ultima4/COVE.ULT
         npcs: skip umap 1024
 
-        tlk: read/text construct file [".ULT" ".TLK"]
+        tlk: read construct file [
+            ".ULT" ".TLK"
+            "LCB_1" "LCB"
+            "LCB_2" "LCB"
+        ]
         name-of: func [n] [
             if or zero? n gt? n 16 [return none]
             -- n
             tname: skip tlk add 3 mul n 288
-            slice tname find tname '^0'
+            replace to-string slice tname find tname 0
+                '^/' ' '
         ]
 
         prin tmx-head basename file 32
