@@ -2,10 +2,6 @@
 ; Dump MONSTERS.SAV
 
 file: first args
-if ne? 256 second info? file [
-    print "MONSTERS.SAV must be 256 bytes."
-    quit/return 1
-]
 
 coord: func [xind] [
     to-coord reduce [pick xind 1 pick xind 0x21]
@@ -68,19 +64,50 @@ graphics: [
     252 Balron
 ]
 
-dat: read file
-print "monsters: ["
-loop [i 0 31] [
-    cid: pick dat 1
-    pid: pick dat 0x61
-    ifn zero? or cid pid [
-        pcoord: either zero? cid [:coord3] [:coord]
-        print format ["  " 2 ' ' 12 ' ' 8 ' ' 12 ' ' 8] [
-            i
-            gfx cid coord  skip dat 0x20
-            gfx pid pcoord skip dat 0x80
-        ]
+dump-monsters: func [file] [
+    if ne? 256 second info? file [
+        print "MONSTERS.SAV must be 256 bytes."
+        quit/return 1
     ]
-    ++ dat
+
+    dat: read file
+    print "monsters: ["
+    loop [i 0 31] [
+        cid: pick dat 1
+        pid: pick dat 0x61
+        ifn zero? or cid pid [
+            pcoord: either zero? cid [:coord3] [:coord]
+            print format ["  " 2 ' ' 12 ' ' 8 ' ' 12 ' ' 8] [
+                i
+                gfx cid coord  skip dat 0x20
+                gfx pid pcoord skip dat 0x80
+            ]
+        ]
+        ++ dat
+    ]
+    print ']'
 ]
-print ']'
+
+make-monsters: func [file] [
+    dat: make binary! 256
+    append/repeat dat 0 256
+
+    spec: select load file 'monsters
+    foreach [index gfx pos prev-gfx prev-pos] spec [
+        entry: skip dat index
+        poke entry 1    pick find graphics gfx -1
+        poke entry 0x21 first  pos
+        poke entry 0x41 second pos
+        poke entry 0x61 pick find graphics prev-gfx -1
+        poke entry 0x81 first  prev-pos
+        poke entry 0xA1 second prev-pos
+    ]
+    write fp: open 1 dat
+    close fp
+]
+
+either eq? last file 'b' [
+    make-monsters file
+][
+    dump-monsters file
+]
