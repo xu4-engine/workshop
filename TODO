@@ -5,75 +5,50 @@ Bugs
 
 [ ] Ship bugs
 [ ]   Player ship sunk by pirates/monsters should keep the hit graphic visible
-      during death seq.
+      during the death sequence.
 [ ]   Pirate ships sometimes flicker when moving.
-[X]   After storm sunk ship an adjacent pirate ship began combat (with no
-      party members visible) then a segfault occurred.
-[X]   Player ship should only sink after damage goes below zero.
-[X]   Pirate ships are indecisive (toggle facing in place).  Seems like they
-      tend to move along their current facing in DOS version.
 [ ] Pit/Rock traps shaking should be confined to main view.
 [ ] Have seen "<player> is Killed!" printed twice (was fighting two enemies).
 [ ] HQX filter does not work at 5x scale.
 [ ] Font colors are incorrect with SDL backend.
 
 
-1. Cleanup & Modernize Backend
-==============================
-This will cleanup the code and start down the path to GPU rendering.
+Cleanup & Modernize Backend
+===========================
 
-[X] Cleanup backends.
-[X]    Drop iOS due to lack of developer support.
-[X] Remove indexed (CLUT) images.
-[X]    Re-implement text coloration.
-[X]    Re-implement dungeon color remapping.
-[X] Create Allegro 5 backend.
 [/] Create GameServices.
 [/]    Collect globals into struct.
 [ ]    Init/free modules in consistent manner.
-[X] Fix all memory leaks.
 [ ] Update SDL to v2.
 [ ]    Implement loadBitmapPng
 [-]    Implement equivalent of al_fopen_slice.  Not needed with Fuan backend.
 
 
-2. Refactor Config to be more Data Oriented
-===========================================
-This will hide the configuration storage format to allow alternate
-storage backends and simplify data access.
-
-[X] Replace uses of ConfigElement with Config methods that return
-    data (raw structures if possible).
-[-] Allow game to run by just placing binary in GOG Ultima 4 directory.
-[/] Create xu4 package backend (game modules).
-[X]   Create pack-xu4 tool.
-[/]   Package overlay.
-[ ]   Store game module in settings->game.
-[ ]   Allow user to select game module from inside program.
-
-
-3. Rendering with GPU
-=====================
+Rendering with GPU
+==================
 Accelerate drawing and support 3D scenes & models.
 
-[X] Create OpenGL context and shader.
 [/] Convert raster blits to GPU primitive lists.
-[/] Separate map rendering from objects (sprites).
+[ ] Render map on GPU
+[/]   Separate map rendering from objects (sprites).
+[ ]   Support water scroll animation without needing the water tile to be in
+      the same texture map column as the base tile.
 [ ] Render 3D models.
 
 
-4. Toolset for Extended Journeys
-================================
+Toolset for Extended Journeys
+=============================
 
-[ ] Map editor
+[/] Map editor (using Tiled)
+[ ]   Implement alternative to ULT files (store NPCs in config).
 [ ] NPC editor
 [ ] Item editor (new equipment)
-[ ] Zone editor (path following)
+[ ] Zone editor (for path following)
 [ ] Composer/Animation editor (titles)
 
 
-5. Emulate Ulitma V
-===================
+Emulate Ulitma V
+================
 The game data is similar to U4, so this shouldn't be too hard.
 
 [ ] Load maps & graphics.
