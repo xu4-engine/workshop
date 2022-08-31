@@ -9,7 +9,7 @@ dump-strings: func [offset count /label desc] [
     ]
 ]
 
-bin: read %ultima4_/AVATAR.EXE
+bin: read %ultima4_orig/AVATAR.EXE
 print "; AVATAR.EXE"
 dump-strings 0x0fc7b 11
 dump-strings 0x0fee4 7
@@ -17,7 +17,8 @@ dump-strings 0x10187 5
 dump-strings/label 0x123E9 53 "Hawkwind"
 dump-strings/label 0x1561D 24 "Lord British"
 dump-strings 0x156CA 25
+dump-strings 0x16DF2 24 "Shrine"
 
-bin: read %ultima4_/TITLE.EXE
+bin: read %ultima4_orig/TITLE.EXE
 print "^/; TITLE.EXE"
 dump-strings 17444 add 28 [24 15]
