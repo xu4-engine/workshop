@@ -267,14 +267,15 @@ switch skip tail file -4 [
         loop 32 [
             ifn zero? gid: first npcs [
                 tlk-index: pick npcs 0xE1
-                print-tmx-obj/name/type ++ obj-id gid pick npcs 0x21
-                                                      pick npcs 0x41
+                print-tmx-obj/name/type obj-id gid pick npcs 0x21
+                                                   pick npcs 0x41
                     name-of tlk-index
                     rejoin [
                         select [0 'S' 1 'W' 0x80 'F' 0xFF 'A'] pick npcs 0xC1 
                         ' ' tlk-index
                     ]
             ]
+            ++ obj-id
             ++ npcs
         ]
         print " </objectgroup>"
