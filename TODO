@@ -3,6 +3,7 @@ xu4 Todo List & Roadmap
 Bugs
 ====
 
+[?] Looks like DOS version always plays flee sound when PC leaves combat.
 [ ] Ship bugs
 [ ]   Player ship sunk by pirates/monsters should keep the hit graphic visible
       during the death sequence.
@@ -22,6 +23,8 @@ Cleanup & Modernize Backend
 [ ] Update SDL to v2.
 [ ]    Implement loadBitmapPng
 [-]    Implement equivalent of al_fopen_slice.  Not needed with Fuan backend.
+[ ] Finish Android Port
+[ ]    Implement touch controls (with gui_ & gpu_ to support any OS).
 
 
 Rendering with GPU
@@ -39,6 +42,7 @@ Accelerate drawing and support 3D scenes & models.
 Toolset for Extended Journeys
 =============================
 
+[ ] Provide a generic game save format when not running the Ultima-IV module.
 [/] Map editor (using Tiled)
 [ ]   Implement alternative to ULT files (store NPCs in config).
 [ ] NPC editor
